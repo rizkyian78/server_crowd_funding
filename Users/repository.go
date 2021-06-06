@@ -6,7 +6,7 @@ type Repository interface {
 	Save(user User) (User, error)
 }
 
-type repository struct {
+type repository struct { //private
 	db *gorm.DB
 }
 
