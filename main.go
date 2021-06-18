@@ -27,13 +27,15 @@ func main() {
 	}
 	userRepository := Users.NewRepository(db)
 	userService := Users.NewService(userRepository)
+
 	userHandler := handler.NewUserHandler(userService)
 
 	router := gin.New()
 
 	api := router.Group("/api/v1")
 
-	api.POST("/users", userHandler.RegisterUser)
+	api.POST("/register", userHandler.RegisterUser)
+	api.POST("/login", userHandler.LoginUser)
 
 	router.Run(fmt.Sprintf(":%s", port_host))
 }
