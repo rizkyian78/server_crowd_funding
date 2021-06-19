@@ -11,6 +11,9 @@ import (
 type Service interface {
 	RegisterUser(input RegisterUserInput) (User, error)
 	LoginUser(input LoginInput) (User, error)
+	CheckEmail(input CheckEmailInput) (bool, error)
+	SaveAvatar(ID string, fileLocation string) (User, error)
+	GetUserByID(ID string) (User, error)
 }
 
 type service struct {
@@ -54,6 +57,42 @@ func (s *service) LoginUser(input LoginInput) (User, error) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(password))
 	if err != nil {
 		return user, errors.New("Wrong Password")
+	}
+	return user, nil
+}
+
+func (s *service) CheckEmail(input CheckEmailInput) (bool, error) {
+	email := input.Email
+	user, err := s.repository.FindByEmail(email)
+	if err != nil {
+		return false, err
+	}
+	if user.ID == "" {
+		return true, nil
+	}
+	return false, nil
+}
+
+func (s *service) SaveAvatar(ID string, fileLocation string) (User, error) {
+	user, err := s.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	}
+	user.AvatarFileName = fileLocation
+	updatedUser, err := s.repository.Update(user)
+	if err != nil {
+		return updatedUser, err
+	}
+	return updatedUser, nil
+}
+
+func (s *service) GetUserByID(ID string) (User, error) {
+	user, err := s.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	}
+	if user.ID == "" {
+		return user, errors.New("No User Found")
 	}
 	return user, nil
 }

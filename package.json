@@ -1,0 +1,20 @@
+{
+  "name": "crowd_fund_server",
+  "version": "1.0.0",
+  "description": "API CAMPAIGN GOLANG start with declare port and make env",
+  "main": "index.js",
+  "scripts": {
+    "custom": "gin --appPort 8000 -i"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rizkyian78/server_crowd_funding.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rizkyian78/server_crowd_funding/issues"
+  },
+  "homepage": "https://github.com/rizkyian78/server_crowd_funding#readme"
+}
