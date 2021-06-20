@@ -3,6 +3,7 @@ package main
 import (
 	"crowd_fund_server/Users"
 	"crowd_fund_server/auth"
+	"crowd_fund_server/campaign"
 	"crowd_fund_server/handler"
 	"crowd_fund_server/helper"
 	"fmt"
@@ -31,19 +32,26 @@ func main() {
 		log.Fatal(err.Error())
 	}
 	userRepository := Users.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+
 	userService := Users.NewService(userRepository)
+	campaignService := campaign.NewService(campaignRepository)
 	authService := auth.NewService()
 
 	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHandler(campaignService)
 
-	router := gin.New()
-
+	router := gin.Default()
+	router.Static("/image", "./public")
 	api := router.Group("/api/v1")
 
 	api.POST("/register", userHandler.RegisterUser)
 	api.POST("/login", userHandler.LoginUser)
 	api.POST("/check-email", userHandler.CheckEmail)
 	api.POST("/upload-avatar", authMiddleware(authService, userService), userHandler.UploadAvatar)
+
+	// Campaign Route
+	api.GET("/campaign", campaignHandler.GetCampaigns)
 
 	router.Run(fmt.Sprintf(":%s", port_host))
 }
