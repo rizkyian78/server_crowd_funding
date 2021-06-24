@@ -52,6 +52,7 @@ func main() {
 
 	// Campaign Route
 	api.GET("/campaign", campaignHandler.GetCampaigns)
+	api.GET("/campaign/:id", campaignHandler.GetCampaign)
 
 	router.Run(fmt.Sprintf(":%s", port_host))
 }
